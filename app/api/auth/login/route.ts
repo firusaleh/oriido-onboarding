@@ -49,7 +49,7 @@ export async function POST(request: NextRequest) {
       success: true, 
       role,
       isFirstLogin,
-      redirect: isFirstLogin ? '/registrieren' : (role === 'admin' ? '/admin' : '/neu')
+      redirect: isFirstLogin ? '/registrieren' : '/dashboard'
     });
   } catch (error) {
     console.error('Login error:', error);

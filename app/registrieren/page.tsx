@@ -44,7 +44,7 @@ export default function RegisterPage() {
       const data = await res.json();
 
       if (res.ok) {
-        router.push('/neu');
+        router.push('/dashboard');
       } else {
         setError(data.error || 'Registrierung fehlgeschlagen');
       }

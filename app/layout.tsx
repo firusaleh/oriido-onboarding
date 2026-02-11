@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import BottomNav from "../components/BottomNav";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -40,6 +41,7 @@ export default function RootLayout({
       <body className={inter.className}>
         <div className="min-h-screen bg-background">
           {children}
+          <BottomNav />
         </div>
       </body>
     </html>

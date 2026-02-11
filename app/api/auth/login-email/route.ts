@@ -47,7 +47,7 @@ export async function POST(request: NextRequest) {
       success: true, 
       role: user.role,
       isFirstLogin: false,
-      redirect: user.role === 'admin' ? '/admin' : '/neu'
+      redirect: '/dashboard'
     });
   } catch (error) {
     console.error('Email login error:', error);

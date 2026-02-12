@@ -168,12 +168,21 @@ export default function CrmPage() {
             <h1 className="text-2xl font-bold text-primary">
               Meine <span className="text-accent">Pipeline</span>
             </h1>
-            <button
-              onClick={() => setShowQuickAdd(true)}
-              className="bg-accent hover:bg-accent-hover text-white rounded-full w-12 h-12 flex items-center justify-center text-2xl font-bold transition-colors"
-            >
-              +
-            </button>
+            <div className="flex gap-2">
+              <button
+                onClick={() => router.push('/prospecting')}
+                className="px-3 py-2 bg-surface border border-border rounded-lg hover:bg-surface-hover transition-colors text-sm"
+                title="Auf Karte suchen"
+              >
+                🗺️
+              </button>
+              <button
+                onClick={() => setShowQuickAdd(true)}
+                className="bg-accent hover:bg-accent-hover text-white rounded-full w-12 h-12 flex items-center justify-center text-2xl font-bold transition-colors"
+              >
+                +
+              </button>
+            </div>
           </div>
 
           {/* Search */}

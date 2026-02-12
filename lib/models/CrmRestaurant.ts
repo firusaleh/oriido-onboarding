@@ -55,6 +55,16 @@ const crmRestaurantSchema = new mongoose.Schema({
   // Absage-Grund
   absageGrund: String,
   
+  // Google Places Integration
+  placeId: String,
+  googleBewertung: Number,
+  googleFotos: [String],
+  quelle: {
+    type: String,
+    enum: ['manuell', 'google_maps', 'import'],
+    default: 'manuell'
+  },
+  
   // Meta
   erstelltAm: {
     type: Date,

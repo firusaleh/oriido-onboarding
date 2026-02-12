@@ -120,6 +120,26 @@ export default function DashboardPage() {
           </Link>
 
           <Link
+            href="/prospecting"
+            className="block bg-surface border border-border rounded-xl p-6 hover:bg-surface-hover transition-colors"
+          >
+            <div className="flex items-center space-x-4">
+              <div className="w-12 h-12 bg-success/20 rounded-xl flex items-center justify-center">
+                <span className="text-2xl">🗺️</span>
+              </div>
+              <div className="flex-1">
+                <h3 className="text-lg font-semibold text-primary">
+                  Restaurants entdecken
+                </h3>
+                <p className="text-secondary text-sm mt-1">
+                  Finde neue Restaurants auf der Karte in deiner Nähe
+                </p>
+              </div>
+              <span className="text-secondary text-xl">›</span>
+            </div>
+          </Link>
+
+          <Link
             href="/tools"
             className="block bg-surface border border-border rounded-xl p-6 hover:bg-surface-hover transition-colors"
           >

@@ -50,14 +50,14 @@ export default function BottomNav() {
       icon: '🏠',
     },
     {
-      id: 'tools',
-      label: 'Tools',
-      href: '/tools',
-      icon: '🧰',
+      id: 'prospecting',
+      label: 'Entdecken',
+      href: '/prospecting',
+      icon: '🗺️',
     },
     {
       id: 'crm',
-      label: 'CRM',
+      label: 'Pipeline',
       href: '/crm',
       icon: '📋',
     },
@@ -70,9 +70,10 @@ export default function BottomNav() {
   ];
 
   const moreMenuItems: MoreMenuItem[] = [
+    { label: 'Sales Tools', href: '/tools', icon: '🧰' },
     { label: 'Dokumente', href: '/tools/dokumente', icon: '📄' },
     { label: 'Einwände', href: '/tools/einwaende', icon: '💬' },
-    { label: 'Leitfaden', href: '/tools/leitfaden', icon: '🗺️' },
+    { label: 'Leitfaden', href: '/tools/leitfaden', icon: '📑' },
     { label: 'Briefing', href: '/tools/briefing', icon: '📣' },
     { label: 'Meine Einreichungen', href: '/meine', icon: '📝' },
     ...(userRole === 'admin' ? [

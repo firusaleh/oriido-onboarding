@@ -22,7 +22,7 @@ export async function GET(
     }
 
     // Nur Admin oder der Besitzer kann es sehen
-    if (session.role !== 'admin' && restaurant.verkaeuferId !== session.userId) {
+    if (session.role !== 'admin' && (restaurant as any).verkaeuferId !== session.userId) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
     }
 

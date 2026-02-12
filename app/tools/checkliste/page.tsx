@@ -177,7 +177,7 @@ export default function ChecklistePage() {
           {/* Info Box */}
           <div className="bg-surface border border-border rounded-xl p-4">
             <p className="text-sm text-secondary leading-relaxed">
-              <span className="text-accent font-semibold">So funktioniert's:</span> Geh die Punkte durch und hak ab, was auf dein Restaurant zutrifft. Je mehr Haken, desto mehr profitierst du von Oriido. Aber auch mit nur 2–3 Haken lohnt es sich!
+              <span className="text-accent font-semibold">So funktioniert&apos;s:</span> Geh die Punkte durch und hak ab, was auf dein Restaurant zutrifft. Je mehr Haken, desto mehr profitierst du von Oriido. Aber auch mit nur 2–3 Haken lohnt es sich!
             </p>
           </div>
 

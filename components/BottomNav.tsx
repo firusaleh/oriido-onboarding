@@ -70,16 +70,13 @@ export default function BottomNav() {
   ];
 
   const moreMenuItems: MoreMenuItem[] = [
-    { label: 'Dokumente', href: '/dokumente', icon: '📄' },
-    { label: 'Einwände', href: '/einwaende', icon: '💬' },
-    { label: 'Leitfaden', href: '/leitfaden', icon: '🗺️' },
-    { label: 'Briefing', href: '/briefing', icon: '📣' },
+    { label: 'Dokumente', href: '/tools/dokumente', icon: '📄' },
+    { label: 'Einwände', href: '/tools/einwaende', icon: '💬' },
+    { label: 'Leitfaden', href: '/tools/leitfaden', icon: '🗺️' },
+    { label: 'Briefing', href: '/tools/briefing', icon: '📣' },
     { label: 'Meine Einreichungen', href: '/meine', icon: '📝' },
     ...(userRole === 'admin' ? [
       { label: 'Admin Dashboard', href: '/admin', icon: '⚙️', adminOnly: true },
-      { label: 'Dokumente verwalten', href: '/admin/dokumente', icon: '📁', adminOnly: true },
-      { label: 'Einwände verwalten', href: '/admin/einwaende', icon: '✏️', adminOnly: true },
-      { label: 'Briefing erstellen', href: '/admin/briefing', icon: '📢', adminOnly: true },
     ] : [])
   ];
 

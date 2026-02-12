@@ -38,6 +38,51 @@ export default function ToolsPage() {
     );
   }
 
+  const salesTools = [
+    {
+      href: '/tools/checkliste',
+      icon: '✅',
+      title: 'Restaurant-Checkliste',
+      description: 'Ist das Restaurant bereit? 8 Punkte durchgehen.',
+      color: 'accent'
+    },
+    {
+      href: '/tools/demo',
+      icon: '📱',
+      title: 'Live-Demo',
+      description: 'QR-Code scannen – Oriido als Gast erleben.',
+      color: 'info'
+    },
+    {
+      href: '/tools/einwaende',
+      icon: '💬',
+      title: 'Einwände Datenbank',
+      description: '12 häufige Einwände mit perfekten Antworten.',
+      color: 'warning'
+    },
+    {
+      href: '/tools/leitfaden',
+      icon: '🗺️',
+      title: 'Gesprächsleitfaden',
+      description: '8 Schritte zum erfolgreichen Verkaufsgespräch.',
+      color: 'success'
+    },
+    {
+      href: '/tools/dokumente',
+      icon: '📄',
+      title: 'Dokumente Hub',
+      description: 'Alle Verkaufsunterlagen an einem Ort.',
+      color: 'primary'
+    },
+    {
+      href: '/tools/briefing',
+      icon: '📢',
+      title: 'Tägliches Briefing',
+      description: 'Aktuelle News und wichtige Updates.',
+      color: 'secondary'
+    }
+  ];
+
   return (
     <div className="min-h-screen bg-background pb-24">
       <div className="max-w-md mx-auto p-4 space-y-6">
@@ -49,48 +94,52 @@ export default function ToolsPage() {
           </p>
         </div>
 
-        {/* Tool Cards */}
-        <div className="space-y-4">
-          <Link
-            href="/tools/checkliste"
-            className="block bg-surface border border-border rounded-xl p-6 hover:bg-surface-hover transition-colors"
-          >
-            <div className="flex items-center space-x-4">
-              <div className="w-12 h-12 bg-accent/12 rounded-xl flex items-center justify-center">
-                <span className="text-2xl">✅</span>
-              </div>
-              <div className="flex-1">
-                <h3 className="text-lg font-semibold text-primary">
-                  Restaurant-Checkliste
+        {/* Tool Cards Grid */}
+        <div className="grid grid-cols-2 gap-3">
+          {salesTools.map((tool) => (
+            <Link
+              key={tool.href}
+              href={tool.href}
+              className="bg-surface border border-border rounded-xl p-4 hover:bg-surface-hover transition-all hover:shadow-md group"
+            >
+              <div className="flex flex-col h-full">
+                <div className={`w-10 h-10 bg-${tool.color}/12 rounded-lg flex items-center justify-center mb-3`}>
+                  <span className="text-xl">{tool.icon}</span>
+                </div>
+                <h3 className="font-semibold text-primary text-sm mb-1">
+                  {tool.title}
                 </h3>
-                <p className="text-secondary text-sm mt-1">
-                  Ist das Restaurant bereit? 8 Punkte durchgehen.
+                <p className="text-secondary text-xs line-clamp-2 flex-1">
+                  {tool.description}
                 </p>
+                <div className="text-accent text-xs mt-2 group-hover:translate-x-1 transition-transform">
+                  Öffnen →
+                </div>
               </div>
-              <span className="text-secondary text-xl">›</span>
-            </div>
-          </Link>
-
-          <Link
-            href="/tools/demo"
-            className="block bg-surface border border-border rounded-xl p-6 hover:bg-surface-hover transition-colors"
-          >
-            <div className="flex items-center space-x-4">
-              <div className="w-12 h-12 bg-info/12 rounded-xl flex items-center justify-center">
-                <span className="text-2xl">📱</span>
-              </div>
-              <div className="flex-1">
-                <h3 className="text-lg font-semibold text-primary">
-                  Live-Demo
-                </h3>
-                <p className="text-secondary text-sm mt-1">
-                  QR-Code scannen – Oriido als Gast erleben.
-                </p>
-              </div>
-              <span className="text-secondary text-xl">›</span>
-            </div>
-          </Link>
+            </Link>
+          ))}
         </div>
+
+        {/* CRM Quick Access */}
+        <Link
+          href="/crm"
+          className="block bg-gradient-to-r from-purple-500 to-indigo-600 text-white rounded-xl p-6 hover:from-purple-600 hover:to-indigo-700 transition-all"
+        >
+          <div className="flex items-center space-x-4">
+            <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
+              <span className="text-2xl">📊</span>
+            </div>
+            <div className="flex-1">
+              <h3 className="text-lg font-semibold">
+                CRM Pipeline
+              </h3>
+              <p className="text-white/90 text-sm mt-1">
+                Restaurants verwalten und nachverfolgen
+              </p>
+            </div>
+            <span className="text-white/80 text-xl">›</span>
+          </div>
+        </Link>
 
         {/* Onboarding CTA */}
         <div className="bg-surface border border-border rounded-xl p-6">
@@ -124,9 +173,9 @@ export default function ToolsPage() {
                 Tipp für dein Verkaufsgespräch
               </h4>
               <p className="text-secondary text-xs mt-1 leading-relaxed">
-                Beginne mit der Checkliste, um den Bedarf zu ermitteln. 
-                Zeige dann die Demo, damit der Kunde Oriido selbst erlebt. 
-                Bei Interesse direkt das Onboarding starten.
+                Nutze den Gesprächsleitfaden für die Struktur, die Einwände-Datenbank 
+                bei Bedenken und die Checkliste zur Qualifikation. Bei Interesse direkt 
+                das Onboarding starten.
               </p>
             </div>
           </div>

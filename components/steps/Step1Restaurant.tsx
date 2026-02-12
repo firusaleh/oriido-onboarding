@@ -204,7 +204,7 @@ export default function Step1Restaurant({ id, initialData, onNext, onSave }: Pro
           </FormField>
         )}
 
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <FormField label="Sitzplätze Innen">
             <input
               type="number"
@@ -228,27 +228,30 @@ export default function Step1Restaurant({ id, initialData, onNext, onSave }: Pro
 
         <div>
           <h3 className="text-lg font-semibold mb-4">Öffnungszeiten</h3>
-          <div className="space-y-3">
+          <div className="space-y-4">
             {WOCHENTAGE.map(tag => (
-              <div key={tag} className="flex items-center gap-4">
-                <span className="w-24 text-sm">{WOCHENTAGE_DISPLAY[tag]}</span>
-                
-                <label className="flex items-center gap-2">
-                  <input
-                    type="checkbox"
-                    checked={data.oeffnungszeiten[tag].geschlossen}
-                    onChange={(e) => updateData({
-                      oeffnungszeiten: {
-                        ...data.oeffnungszeiten,
-                        [tag]: { ...data.oeffnungszeiten[tag], geschlossen: e.target.checked }
-                      }
-                    })}
-                  />
-                  <span className="text-sm text-secondary">Geschlossen</span>
-                </label>
+              <div key={tag} className="bg-surface-hover rounded-lg p-3">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="font-medium text-sm">{WOCHENTAGE_DISPLAY[tag]}</span>
+                  
+                  <label className="flex items-center gap-2">
+                    <input
+                      type="checkbox"
+                      checked={data.oeffnungszeiten[tag].geschlossen}
+                      onChange={(e) => updateData({
+                        oeffnungszeiten: {
+                          ...data.oeffnungszeiten,
+                          [tag]: { ...data.oeffnungszeiten[tag], geschlossen: e.target.checked }
+                        }
+                      })}
+                      className="w-4 h-4"
+                    />
+                    <span className="text-sm text-secondary">Geschlossen</span>
+                  </label>
+                </div>
 
                 {!data.oeffnungszeiten[tag].geschlossen && (
-                  <>
+                  <div className="flex items-center gap-2">
                     <input
                       type="time"
                       value={data.oeffnungszeiten[tag].von}
@@ -258,9 +261,9 @@ export default function Step1Restaurant({ id, initialData, onNext, onSave }: Pro
                           [tag]: { ...data.oeffnungszeiten[tag], von: e.target.value }
                         }
                       })}
-                      className="px-3 py-2 rounded-lg border"
+                      className="flex-1 px-3 py-2 rounded-lg border bg-background"
                     />
-                    <span className="text-secondary">bis</span>
+                    <span className="text-secondary px-2">bis</span>
                     <input
                       type="time"
                       value={data.oeffnungszeiten[tag].bis}
@@ -270,9 +273,9 @@ export default function Step1Restaurant({ id, initialData, onNext, onSave }: Pro
                           [tag]: { ...data.oeffnungszeiten[tag], bis: e.target.value }
                         }
                       })}
-                      className="px-3 py-2 rounded-lg border"
+                      className="flex-1 px-3 py-2 rounded-lg border bg-background"
                     />
-                  </>
+                  </div>
                 )}
               </div>
             ))}

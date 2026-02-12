@@ -14,7 +14,7 @@ export async function GET() {
       .lean()
     
     // Add read status for current user
-    const briefingsWithReadStatus = briefings.map(b => ({
+    const briefingsWithReadStatus = briefings.map((b: any) => ({
       ...b,
       _id: b._id.toString(),
       gelesen: session ? b.gelesenVon?.includes(session.name) : false

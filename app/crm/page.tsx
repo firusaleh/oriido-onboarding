@@ -16,6 +16,7 @@ export default function CrmPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [activeFilter, setActiveFilter] = useState('alle');
   const [viewMode, setViewMode] = useState<'list' | 'kanban'>('list');
+  const [draggedRestaurant, setDraggedRestaurant] = useState<any>(null);
 
   useEffect(() => {
     const checkAuthAndLoadData = async () => {
@@ -109,6 +110,45 @@ export default function CrmPage() {
     }
   };
 
+  const handleStatusUpdate = async (restaurantId: string, newStatus: string) => {
+    try {
+      const res = await fetch(`/api/crm/${restaurantId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: newStatus })
+      });
+
+      if (res.ok) {
+        const updatedRestaurant = await res.json();
+        setRestaurants(restaurants.map(r => 
+          r._id === restaurantId ? updatedRestaurant : r
+        ));
+      }
+    } catch (error) {
+      console.error('Error updating status:', error);
+    }
+  };
+
+  const handleDragStart = (restaurant: any) => {
+    setDraggedRestaurant(restaurant);
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+  };
+
+  const handleDrop = (e: React.DragEvent, status: string) => {
+    e.preventDefault();
+    if (draggedRestaurant) {
+      handleStatusUpdate(draggedRestaurant._id, status);
+      setDraggedRestaurant(null);
+    }
+  };
+
+  const getRestaurantsByStatus = (status: string) => {
+    return filteredRestaurants.filter(r => r.status === status);
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center pb-20">
@@ -171,9 +211,8 @@ export default function CrmPage() {
                 ? 'bg-accent text-white'
                 : 'bg-surface border border-border text-secondary hover:bg-surface-hover'
             }`}
-            disabled
           >
-            📊 Kanban (bald)
+            📊 Kanban
           </button>
         </div>
 
@@ -201,28 +240,82 @@ export default function CrmPage() {
           ))}
         </div>
 
-        {/* Restaurant List */}
-        <div className="space-y-3">
-          {filteredRestaurants.length === 0 ? (
-            <div className="text-center py-12">
-              <div className="text-5xl mb-4">🍽️</div>
-              <h3 className="text-lg font-semibold text-primary mb-2">
-                {searchQuery || activeFilter !== 'alle' 
-                  ? 'Keine Restaurants gefunden' 
-                  : 'Noch keine Restaurants'}
-              </h3>
-              <p className="text-secondary">
-                {searchQuery || activeFilter !== 'alle'
-                  ? 'Versuche andere Suchbegriffe oder Filter'
-                  : 'Füge dein erstes Restaurant hinzu'}
-              </p>
+        {/* Restaurant List or Kanban Board */}
+        {viewMode === 'list' ? (
+          <div className="space-y-3">
+            {filteredRestaurants.length === 0 ? (
+              <div className="text-center py-12">
+                <div className="text-5xl mb-4">🍽️</div>
+                <h3 className="text-lg font-semibold text-primary mb-2">
+                  {searchQuery || activeFilter !== 'alle' 
+                    ? 'Keine Restaurants gefunden' 
+                    : 'Noch keine Restaurants'}
+                </h3>
+                <p className="text-secondary">
+                  {searchQuery || activeFilter !== 'alle'
+                    ? 'Versuche andere Suchbegriffe oder Filter'
+                    : 'Füge dein erstes Restaurant hinzu'}
+                </p>
+              </div>
+            ) : (
+              filteredRestaurants.map(restaurant => (
+                <CrmRestaurantCard key={restaurant._id} restaurant={restaurant} />
+              ))
+            )}
+          </div>
+        ) : (
+          <div className="overflow-x-auto -mx-4 px-4">
+            <div className="flex gap-3 min-w-[800px] pb-4">
+              {[
+                { status: 'lead', label: 'Neu', color: 'bg-blue-50 border-blue-200', emoji: '🆕' },
+                { status: 'kontaktiert', label: 'Kontaktiert', color: 'bg-yellow-50 border-yellow-200', emoji: '📞' },
+                { status: 'termin', label: 'Demo', color: 'bg-purple-50 border-purple-200', emoji: '🎯' },
+                { status: 'angebot', label: 'Verhandlung', color: 'bg-orange-50 border-orange-200', emoji: '💬' },
+                { status: 'gewonnen', label: 'Gewonnen', color: 'bg-green-50 border-green-200', emoji: '🎉' },
+                { status: 'verloren', label: 'Verloren', color: 'bg-red-50 border-red-200', emoji: '❌' }
+              ].map(column => (
+                <div 
+                  key={column.status}
+                  className={`flex-1 min-w-[200px] ${column.color} border-2 rounded-lg p-3`}
+                  onDragOver={handleDragOver}
+                  onDrop={(e) => handleDrop(e, column.status)}
+                >
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="font-semibold text-sm text-gray-700">
+                      {column.emoji} {column.label}
+                    </h3>
+                    <span className="bg-white px-2 py-0.5 rounded-full text-xs font-medium">
+                      {getRestaurantsByStatus(column.status).length}
+                    </span>
+                  </div>
+                  <div className="space-y-2 min-h-[200px]">
+                    {getRestaurantsByStatus(column.status).map(restaurant => (
+                      <div
+                        key={restaurant._id}
+                        draggable
+                        onDragStart={() => handleDragStart(restaurant)}
+                        className="bg-white p-3 rounded-lg shadow-sm cursor-move hover:shadow-md transition-shadow"
+                        onClick={() => router.push(`/crm/${restaurant._id}`)}
+                      >
+                        <h4 className="font-medium text-sm text-gray-900 mb-1">
+                          {restaurant.name}
+                        </h4>
+                        <p className="text-xs text-gray-500">
+                          {restaurant.adresse}
+                        </p>
+                        {restaurant.naechsterKontakt && (
+                          <p className="text-xs text-orange-600 mt-2">
+                            📅 {new Date(restaurant.naechsterKontakt).toLocaleDateString('de-DE')}
+                          </p>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
             </div>
-          ) : (
-            filteredRestaurants.map(restaurant => (
-              <CrmRestaurantCard key={restaurant._id} restaurant={restaurant} />
-            ))
-          )}
-        </div>
+          </div>
+        )}
       </div>
 
       {/* Quick Add Modal */}

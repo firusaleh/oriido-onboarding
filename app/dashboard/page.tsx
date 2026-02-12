@@ -138,6 +138,28 @@ export default function DashboardPage() {
               <span className="text-secondary text-xl">›</span>
             </div>
           </Link>
+
+          {user?.role === 'admin' && (
+            <Link
+              href="/admin"
+              className="block bg-gradient-to-r from-gray-800 to-gray-700 text-white rounded-xl p-6 hover:from-gray-700 hover:to-gray-600 transition-all"
+            >
+              <div className="flex items-center space-x-4">
+                <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
+                  <span className="text-2xl">⚙️</span>
+                </div>
+                <div className="flex-1">
+                  <h3 className="text-lg font-semibold">
+                    Admin Dashboard
+                  </h3>
+                  <p className="text-white/80 text-sm mt-1">
+                    Verwaltung aller Module und Funktionen
+                  </p>
+                </div>
+                <span className="text-white/80 text-xl">›</span>
+              </div>
+            </Link>
+          )}
         </div>
 
         {/* Recent Onboardings */}

@@ -297,24 +297,26 @@ export default function ProspectingPage() {
               )}
 
               <MarkerClusterer>
-                {(clusterer) =>
-                  filteredRestaurants.map((restaurant) => (
-                    <Marker
-                      key={restaurant.placeId}
-                      position={{ lat: restaurant.lat, lng: restaurant.lng }}
-                      clusterer={clusterer}
-                      onClick={() => handleMarkerClick(restaurant)}
-                      icon={{
-                        path: google.maps.SymbolPath.CIRCLE,
-                        scale: 8,
-                        fillColor: getMarkerColor(restaurant.status),
-                        fillOpacity: 1,
-                        strokeColor: '#ffffff',
-                        strokeWeight: 2
-                      }}
-                    />
-                  ))
-                }
+                {(clusterer) => (
+                  <>
+                    {filteredRestaurants.map((restaurant) => (
+                      <Marker
+                        key={restaurant.placeId}
+                        position={{ lat: restaurant.lat, lng: restaurant.lng }}
+                        clusterer={clusterer}
+                        onClick={() => handleMarkerClick(restaurant)}
+                        icon={{
+                          path: google.maps.SymbolPath.CIRCLE,
+                          scale: 8,
+                          fillColor: getMarkerColor(restaurant.status),
+                          fillOpacity: 1,
+                          strokeColor: '#ffffff',
+                          strokeWeight: 2
+                        }}
+                      />
+                    ))}
+                  </>
+                )}
               </MarkerClusterer>
             </GoogleMap>
 

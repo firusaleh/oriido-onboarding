@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 
 interface RestaurantBottomSheetProps {
   restaurant: any;
@@ -152,12 +153,15 @@ export default function RestaurantBottomSheet({
         {restaurant.fotos && restaurant.fotos.length > 0 && (
           <div className="flex gap-2 overflow-x-auto">
             {restaurant.fotos.map((foto: string, index: number) => (
-              <img
-                key={index}
-                src={foto}
-                alt={`${restaurant.name} Foto ${index + 1}`}
-                className="h-24 w-32 object-cover rounded-lg"
-              />
+              <div key={index} className="relative h-24 w-32 flex-shrink-0">
+                <Image
+                  src={foto}
+                  alt={`${restaurant.name} Foto ${index + 1}`}
+                  fill
+                  className="object-cover rounded-lg"
+                  unoptimized
+                />
+              </div>
             ))}
           </div>
         )}

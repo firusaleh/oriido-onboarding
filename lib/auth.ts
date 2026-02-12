@@ -12,10 +12,23 @@ export interface AuthToken {
 }
 
 export async function verifyPin(pin: string, name: string): Promise<'verkaeufer' | 'admin' | null> {
-  if (pin === process.env.VERKAEUFER_PIN) {
+  // Konvertiere beide zu Strings für sicheren Vergleich
+  const pinStr = String(pin).trim();
+  const verkaueferPin = process.env.VERKAEUFER_PIN ? String(process.env.VERKAEUFER_PIN).trim() : '';
+  const adminPin = process.env.ADMIN_PIN ? String(process.env.ADMIN_PIN).trim() : '';
+  
+  console.log('PIN verification:', {
+    providedPin: pinStr,
+    hasVerkaueferPin: !!verkaueferPin,
+    hasAdminPin: !!adminPin,
+    matchesVerkaufer: pinStr === verkaueferPin,
+    matchesAdmin: pinStr === adminPin
+  });
+  
+  if (pinStr === verkaueferPin && verkaueferPin !== '') {
     return 'verkaeufer';
   }
-  if (pin === process.env.ADMIN_PIN) {
+  if (pinStr === adminPin && adminPin !== '') {
     return 'admin';
   }
   return null;

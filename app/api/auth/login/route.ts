@@ -14,6 +14,12 @@ export async function POST(request: NextRequest) {
       );
     }
     
+    // Debug: Log the environment variables (ohne die tatsächlichen Werte zu zeigen)
+    console.log('Checking PIN for role determination...');
+    console.log('ADMIN_PIN exists:', !!process.env.ADMIN_PIN);
+    console.log('VERKAEUFER_PIN exists:', !!process.env.VERKAEUFER_PIN);
+    console.log('Provided PIN:', pin);
+    
     const role = await verifyPin(pin, name);
     
     if (!role) {
@@ -22,6 +28,8 @@ export async function POST(request: NextRequest) {
         { status: 401 }
       );
     }
+    
+    console.log('Role determined:', role);
     
     await connectToDatabase();
     
@@ -52,9 +60,14 @@ export async function POST(request: NextRequest) {
       redirect: isFirstLogin ? '/registrieren' : '/dashboard'
     });
   } catch (error) {
-    console.error('Login error:', error);
+    console.error('Login error details:', error);
+    console.error('Error type:', typeof error);
+    if (error instanceof Error) {
+      console.error('Error message:', error.message);
+      console.error('Error stack:', error.stack);
+    }
     return NextResponse.json(
-      { error: 'Fehler beim Anmelden' },
+      { error: 'Fehler beim Anmelden', details: error instanceof Error ? error.message : 'Unknown error' },
       { status: 500 }
     );
   }

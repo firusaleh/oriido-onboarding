@@ -84,7 +84,7 @@ export default function ToolsPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-background pb-24">
+    <div className="min-h-screen bg-background pb-16">
       <div className="max-w-md mx-auto p-4 space-y-6">
         {/* Header */}
         <div className="pt-4 pb-2">

@@ -95,21 +95,21 @@ export default function BottomNav() {
   return (
     <>
       <nav className="fixed bottom-0 left-0 right-0 bg-surface/95 backdrop-blur-sm border-t border-border z-40">
-        <div className="flex items-center justify-around px-2 py-3 max-w-md mx-auto">
+        <div className="flex items-center justify-around px-1 py-2 max-w-lg mx-auto">
           {navItems.map((item) => {
             if (item.id === 'mehr') {
               return (
                 <button
                   key={item.id}
                   onClick={() => setShowMoreMenu(!showMoreMenu)}
-                  className={`flex flex-col items-center space-y-1 px-4 py-2 rounded-lg transition-colors min-w-0 flex-1 ${
+                  className={`flex flex-col items-center space-y-0.5 px-3 py-1.5 rounded-lg transition-colors min-w-0 flex-1 ${
                     showMoreMenu
                       ? 'text-accent bg-accent/10'
                       : 'text-secondary hover:text-primary'
                   }`}
                 >
-                  <span className="text-lg">{item.icon}</span>
-                  <span className="text-xs font-medium truncate">{item.label}</span>
+                  <span className="text-base">{item.icon}</span>
+                  <span className="text-[10px] font-medium truncate">{item.label}</span>
                 </button>
               );
             }
@@ -118,14 +118,14 @@ export default function BottomNav() {
               <Link
                 key={item.id}
                 href={item.href}
-                className={`flex flex-col items-center space-y-1 px-4 py-2 rounded-lg transition-colors min-w-0 flex-1 ${
+                className={`flex flex-col items-center space-y-0.5 px-3 py-1.5 rounded-lg transition-colors min-w-0 flex-1 ${
                   isActive(item.href)
                     ? 'text-accent bg-accent/10'
                     : 'text-secondary hover:text-primary'
                 }`}
               >
-                <span className="text-lg">{item.icon}</span>
-                <span className="text-xs font-medium truncate">{item.label}</span>
+                <span className="text-base">{item.icon}</span>
+                <span className="text-[10px] font-medium truncate">{item.label}</span>
               </Link>
             );
           })}

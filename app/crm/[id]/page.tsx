@@ -135,7 +135,7 @@ export default function CrmDetailPage({ params }: { params: { id: string } }) {
   const followUp = getFollowUpStatus();
 
   return (
-    <div className="min-h-screen bg-background pb-24">
+    <div className="min-h-screen bg-background pb-16">
       <div className="max-w-md mx-auto p-4 space-y-6">
         {/* Header */}
         <div className="pt-4">

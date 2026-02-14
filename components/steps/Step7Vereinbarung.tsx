@@ -209,8 +209,8 @@ export default function Step7Vereinbarung({ id, initialData, onNext, onPrevious,
             className="w-5 h-5 rounded text-accent"
           />
           <div>
-            <div className="font-medium">30 Tage kostenlos testen</div>
-            <div className="text-sm text-secondary">Keine Zahlungsdaten erforderlich</div>
+            <div className="font-medium">100 Bestellungen kostenlos testen</div>
+            <div className="text-sm text-secondary">Keine Zahlungsdaten erforderlich - die ersten 100 Bestellungen sind gratis</div>
           </div>
         </label>
 

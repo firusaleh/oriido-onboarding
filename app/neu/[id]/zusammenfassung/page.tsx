@@ -164,7 +164,7 @@ export default function ZusammenfassungPage() {
                   : `Pay per Order (€0,45/Bestellung + €${onboarding.vereinbarung?.setupGebuehr || 300} Setup)`
               } 
             />
-            <InfoRow label="Testphase" value={onboarding.vereinbarung?.testphase ? '30 Tage kostenlos' : 'Nein'} />
+            <InfoRow label="Testphase" value={onboarding.vereinbarung?.testphase ? '100 Bestellungen kostenlos' : 'Nein'} />
             <InfoRow label="Startdatum" value={onboarding.vereinbarung?.startdatum} />
             <InfoRow label="DSGVO" value={onboarding.vereinbarung?.zustimmungDSGVO ? 'Zugestimmt' : 'Ausstehend'} />
             <InfoRow label="AGB" value={onboarding.vereinbarung?.zustimmungAGB ? 'Zugestimmt' : 'Ausstehend'} />

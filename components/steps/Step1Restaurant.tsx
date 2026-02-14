@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import WizardStep from '@/components/WizardStep';
 import FormField from '@/components/FormField';
 import { useAutoSave } from '@/lib/hooks/useAutoSave';
+import { useUserRole } from '@/lib/hooks/useUserRole';
 import { Restaurant } from '@/lib/types';
 
 const RESTAURANT_ARTEN = [
@@ -45,6 +46,7 @@ interface Props {
 }
 
 export default function Step1Restaurant({ id, initialData, onNext, onSave }: Props) {
+  const { isAdmin } = useUserRole();
   const { data, updateData, saving } = useAutoSave(id, 'restaurant', {
     name: '',
     strasse: '',
@@ -92,6 +94,12 @@ export default function Step1Restaurant({ id, initialData, onNext, onSave }: Pro
   };
 
   const validate = () => {
+    // Admins können ohne Validierung durch alle Schritte gehen
+    if (isAdmin) {
+      setErrors({});
+      return true;
+    }
+    
     const newErrors: Record<string, string> = {};
     
     if (!data.name) newErrors.name = 'Restaurantname ist erforderlich';

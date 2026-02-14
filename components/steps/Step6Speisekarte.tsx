@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import WizardStep from '@/components/WizardStep';
 import FormField from '@/components/FormField';
 import { useAutoSave } from '@/lib/hooks/useAutoSave';
+import { useUserRole } from '@/lib/hooks/useUserRole';
 import { Speisekarte } from '@/lib/types';
 
 const SPRACHEN = [
@@ -26,6 +27,7 @@ interface Props {
 }
 
 export default function Step6Speisekarte({ id, initialData, onNext, onPrevious, onSave }: Props) {
+  const { isAdmin } = useUserRole();
   const { data, updateData, saving } = useAutoSave(id, 'speisekarte', {
     dateien: [],
     onlineLink: '',
@@ -49,6 +51,12 @@ export default function Step6Speisekarte({ id, initialData, onNext, onPrevious, 
   }, [saving, onSave]);
 
   const validate = () => {
+    // Admins können ohne Validierung durch alle Schritte gehen
+    if (isAdmin) {
+      setErrors({});
+      return true;
+    }
+    
     const newErrors: Record<string, string> = {};
     
     if (!data.dateien || data.dateien.length === 0) {

@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import WizardStep from '@/components/WizardStep';
 import FormField from '@/components/FormField';
 import { useAutoSave } from '@/lib/hooks/useAutoSave';
+import { useUserRole } from '@/lib/hooks/useUserRole';
 import { Kontakt } from '@/lib/types';
 
 const ROLLEN = ['Inhaber', 'Geschäftsführer', 'Betriebsleiter', 'Sonstiges'];
@@ -18,6 +19,7 @@ interface Props {
 }
 
 export default function Step2Kontakt({ id, initialData, onNext, onPrevious, onSave }: Props) {
+  const { isAdmin } = useUserRole();
   const { data, updateData, saving } = useAutoSave(id, 'kontakt', {
     inhaberName: '',
     inhaberRolle: '',
@@ -46,6 +48,12 @@ export default function Step2Kontakt({ id, initialData, onNext, onPrevious, onSa
   };
 
   const validate = () => {
+    // Admins können ohne Validierung durch alle Schritte gehen
+    if (isAdmin) {
+      setErrors({});
+      return true;
+    }
+    
     const newErrors: Record<string, string> = {};
     
     if (!data.inhaberName) newErrors.inhaberName = 'Name ist erforderlich';

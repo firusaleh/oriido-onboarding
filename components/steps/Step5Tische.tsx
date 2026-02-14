@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import WizardStep from '@/components/WizardStep';
 import FormField from '@/components/FormField';
 import { useAutoSave } from '@/lib/hooks/useAutoSave';
+import { useUserRole } from '@/lib/hooks/useUserRole';
 import { Tische } from '@/lib/types';
 
 interface Props {
@@ -15,6 +16,7 @@ interface Props {
 }
 
 export default function Step5Tische({ id, initialData, onNext, onPrevious, onSave }: Props) {
+  const { isAdmin } = useUserRole();
   const { data, updateData, saving } = useAutoSave(id, 'tische', {
     anzahlGesamt: 0,
     anzahlInnen: 0,
@@ -35,6 +37,12 @@ export default function Step5Tische({ id, initialData, onNext, onPrevious, onSav
   }, [saving, onSave]);
 
   const validate = () => {
+    // Admins können ohne Validierung durch alle Schritte gehen
+    if (isAdmin) {
+      setErrors({});
+      return true;
+    }
+    
     const newErrors: Record<string, string> = {};
     
     if (!data.anzahlGesamt || data.anzahlGesamt === 0) {

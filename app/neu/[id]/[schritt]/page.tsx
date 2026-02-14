@@ -10,6 +10,7 @@ import Step4Technik from '@/components/steps/Step4Technik';
 import Step5Tische from '@/components/steps/Step5Tische';
 import Step6Speisekarte from '@/components/steps/Step6Speisekarte';
 import Step7Vereinbarung from '@/components/steps/Step7Vereinbarung';
+import Step8Vertrag from '@/components/steps/Step8Vertrag';
 
 export default function WizardPage() {
   const params = useParams();
@@ -42,10 +43,10 @@ export default function WizardPage() {
   }, [id, router]);
 
   const handleNext = () => {
-    if (currentStep < 7) {
+    if (currentStep < 8) {
       router.push(`/neu/${id}/${currentStep + 1}`);
     } else {
-      router.push(`/neu/${id}/zusammenfassung`);
+      router.push(`/neu/${id}/erfolg`);
     }
   };
 
@@ -143,6 +144,15 @@ export default function WizardPage() {
             onSave={handleSaveIndicator}
           />
         );
+      case 8:
+        return (
+          <Step8Vertrag
+            id={id}
+            onboardingData={onboarding}
+            onPrevious={handlePrevious}
+            onComplete={() => router.push(`/neu/${id}/erfolg`)}
+          />
+        );
       default:
         return null;
     }
@@ -151,7 +161,7 @@ export default function WizardPage() {
   return (
     <WizardShell
       currentStep={currentStep}
-      totalSteps={7}
+      totalSteps={8}
       onboardingId={id}
       showSave={showSave}
     >

@@ -18,7 +18,8 @@ const steps = [
   'Technik',
   'Tische',
   'Speisekarte',
-  'Abschluss',
+  'Vereinbarung',
+  'Vertrag',
 ];
 
 export default function WizardShell({

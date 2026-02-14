@@ -29,7 +29,7 @@ const CATEGORIES = [
 export default function TemplateEditor({ template, onSave, onCancel }: Props) {
   const [name, setName] = useState(template?.name || '');
   const [description, setDescription] = useState(template?.description || '');
-  const [category, setCategory] = useState(template?.category || 'partner');
+  const [category, setCategory] = useState<'partner' | 'service' | 'datenschutz' | 'agb' | 'sonstiges'>(template?.category || 'partner');
   const [content, setContent] = useState(template?.content || '');
   const [variables, setVariables] = useState<Variable[]>(
     template?.variables?.map(v => ({
@@ -163,7 +163,7 @@ export default function TemplateEditor({ template, onSave, onCancel }: Props) {
                 </label>
                 <select
                   value={category}
-                  onChange={(e) => setCategory(e.target.value)}
+                  onChange={(e) => setCategory(e.target.value as 'partner' | 'service' | 'datenschutz' | 'agb' | 'sonstiges')}
                   className="w-full px-4 py-3 bg-background border border-border rounded-lg focus:border-accent focus:outline-none"
                 >
                   {CATEGORIES.map(cat => (

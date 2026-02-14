@@ -1,13 +1,13 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { ContractTemplate, Contract } from '@/lib/types/contract';
 import SignaturePad from '@/components/contracts/SignaturePad';
 import { generateContractPDF, downloadPDF } from '@/lib/utils/pdf-generator';
 
-export default function NewContractPage() {
+function NewContractPageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const templateId = searchParams.get('template');
@@ -390,5 +390,17 @@ export default function NewContractPage() {
         )}
       </div>
     </div>
+  );
+}
+
+export default function NewContractPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-secondary">Lade...</div>
+      </div>
+    }>
+      <NewContractPageContent />
+    </Suspense>
   );
 }

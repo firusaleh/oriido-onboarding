@@ -16,7 +16,8 @@ interface Props {
 
 export default function Step7Vereinbarung({ id, initialData, onNext, onPrevious, onSave }: Props) {
   const { data, updateData, saving } = useAutoSave(id, 'vereinbarung', {
-    paket: 'standard',
+    preismodell: 'payPerOrder',
+    setupGebuehr: 300,
     startdatum: new Date().toISOString().split('T')[0],
     testphase: true,
     sonderkonditionen: '',
@@ -116,9 +117,81 @@ export default function Step7Vereinbarung({ id, initialData, onNext, onPrevious,
       description="Letzte Details und Bestätigung"
     >
       <div className="space-y-6">
+        <div className="space-y-4">
+          <h3 className="font-semibold">Preismodell wählen:</h3>
+          
+          <label className={`block cursor-pointer border-2 rounded-lg p-4 transition-all ${
+            data.preismodell === 'payPerOrder' ? 'bg-accent/10 border-accent' : 'bg-surface border-border hover:bg-surface-hover'
+          }`}>
+            <input
+              type="radio"
+              name="preismodell"
+              value="payPerOrder"
+              checked={data.preismodell === 'payPerOrder'}
+              onChange={(e) => updateData({ preismodell: e.target.value })}
+              className="sr-only"
+            />
+            <div>
+              <h4 className="font-semibold mb-1">Pay per Order</h4>
+              <p className="text-2xl font-bold text-accent mb-2">€0,45 pro Bestellung</p>
+              <p className="text-sm text-secondary mb-2">+ Setup-Gebühr (einmalig)</p>
+              <ul className="text-sm space-y-1 text-secondary">
+                <li>✓ Keine monatlichen Fixkosten</li>
+                <li>✓ Ideal für kleinere Restaurants</li>
+                <li>✓ Faire Abrechnung nach Nutzung</li>
+              </ul>
+            </div>
+          </label>
+
+          <label className={`block cursor-pointer border-2 rounded-lg p-4 transition-all ${
+            data.preismodell === 'flatRate' ? 'bg-accent/10 border-accent' : 'bg-surface border-border hover:bg-surface-hover'
+          }`}>
+            <input
+              type="radio"
+              name="preismodell"
+              value="flatRate"
+              checked={data.preismodell === 'flatRate'}
+              onChange={(e) => updateData({ preismodell: e.target.value })}
+              className="sr-only"
+            />
+            <div>
+              <h4 className="font-semibold mb-1">Flat Rate</h4>
+              <div className="flex items-baseline gap-3 mb-2">
+                <p className="text-2xl font-bold text-accent">€279/Monat</p>
+                <span className="text-sm text-secondary">oder</span>
+                <p className="text-lg font-semibold text-success">€2.150/Jahr</p>
+                <span className="text-sm text-success">(Spare €1.198)</span>
+              </div>
+              <ul className="text-sm space-y-1 text-secondary">
+                <li>✓ Unbegrenzte Bestellungen</li>
+                <li>✓ Planbare Kosten</li>
+                <li>✓ Ideal für viel frequentierte Restaurants</li>
+              </ul>
+            </div>
+          </label>
+        </div>
+
+        {data.preismodell === 'payPerOrder' && (
+          <FormField 
+            label="Setup-Gebühr (einmalig)" 
+            hint="Standard: €300 - kann angepasst werden"
+          >
+            <div className="flex items-center gap-2">
+              <span className="text-lg">€</span>
+              <input
+                type="number"
+                value={data.setupGebuehr || 300}
+                onChange={(e) => updateData({ setupGebuehr: parseInt(e.target.value) || 0 })}
+                className="flex-1 px-4 py-3 rounded-lg border"
+                min="0"
+                step="50"
+              />
+            </div>
+          </FormField>
+        )}
+
         <div className="bg-info/10 border border-info/20 rounded-lg p-4">
-          <h3 className="font-semibold mb-2">Standard-Paket</h3>
-          <p className="text-2xl font-bold text-accent mb-2">€179/Monat</p>
+          <h3 className="font-semibold mb-2">Inkludierte Leistungen</h3>
           <ul className="text-sm space-y-1 text-secondary">
             <li>✓ Digitale Speisekarte</li>
             <li>✓ QR-Code Bestellung</li>

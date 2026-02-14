@@ -87,7 +87,9 @@ export interface Speisekarte {
 }
 
 export interface Vereinbarung {
-  paket: string;
+  preismodell?: 'payPerOrder' | 'flatRate';
+  setupGebuehr?: number;
+  paket?: string;
   startdatum?: string;
   testphase?: boolean;
   sonderkonditionen?: string;

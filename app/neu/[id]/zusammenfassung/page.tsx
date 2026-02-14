@@ -156,7 +156,14 @@ export default function ZusammenfassungPage() {
 
           {/* Vereinbarung */}
           <SummaryCard title="Vereinbarung" step={7}>
-            <InfoRow label="Paket" value="Standard (€179/Monat)" />
+            <InfoRow 
+              label="Preismodell" 
+              value={
+                onboarding.vereinbarung?.preismodell === 'flatRate' 
+                  ? 'Flat Rate (€279/Monat oder €2.150/Jahr)' 
+                  : `Pay per Order (€0,45/Bestellung + €${onboarding.vereinbarung?.setupGebuehr || 300} Setup)`
+              } 
+            />
             <InfoRow label="Testphase" value={onboarding.vereinbarung?.testphase ? '30 Tage kostenlos' : 'Nein'} />
             <InfoRow label="Startdatum" value={onboarding.vereinbarung?.startdatum} />
             <InfoRow label="DSGVO" value={onboarding.vereinbarung?.zustimmungDSGVO ? 'Zugestimmt' : 'Ausstehend'} />

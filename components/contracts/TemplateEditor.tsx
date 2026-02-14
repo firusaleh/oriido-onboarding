@@ -7,7 +7,7 @@ interface Variable {
   key: string;
   label: string;
   type: 'text' | 'number' | 'date' | 'select' | 'boolean';
-  required: boolean;
+  required?: boolean;
   defaultValue?: string;
   options?: string[];
 }
@@ -31,7 +31,16 @@ export default function TemplateEditor({ template, onSave, onCancel }: Props) {
   const [description, setDescription] = useState(template?.description || '');
   const [category, setCategory] = useState(template?.category || 'partner');
   const [content, setContent] = useState(template?.content || '');
-  const [variables, setVariables] = useState<Variable[]>(template?.variables || []);
+  const [variables, setVariables] = useState<Variable[]>(
+    template?.variables?.map(v => ({
+      key: v.key,
+      label: v.label,
+      type: v.type,
+      required: v.required || false,
+      defaultValue: v.defaultValue,
+      options: v.options,
+    })) || []
+  );
   const [previewMode, setPreviewMode] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
 

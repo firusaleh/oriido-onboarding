@@ -28,8 +28,11 @@ export async function GET(request: NextRequest) {
     if (prospects.length === 0) {
       const apiKey = process.env.GOOGLE_MAPS_API_KEY || process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
       if (!apiKey) {
-        console.error('Google Maps API Key missing in environment variables');
-        return NextResponse.json({ error: 'Google Maps API Key fehlt' }, { status: 500 });
+        console.error('Google Maps API Key missing. Available env vars:', Object.keys(process.env).filter(k => k.includes('GOOGLE')));
+        return NextResponse.json({ 
+          error: 'Google Maps API Key fehlt. Bitte fügen Sie GOOGLE_MAPS_API_KEY in Vercel hinzu.',
+          details: 'Die Umgebungsvariable GOOGLE_MAPS_API_KEY muss in den Vercel-Projekteinstellungen konfiguriert werden.'
+        }, { status: 500 });
       }
 
       const textSearchUrl = `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${encodeURIComponent(
@@ -123,7 +126,12 @@ export async function GET(request: NextRequest) {
     });
   } catch (error) {
     console.error('Search error:', error);
-    return NextResponse.json({ error: 'Suche fehlgeschlagen' }, { status: 500 });
+    const errorMessage = error instanceof Error ? error.message : 'Unbekannter Fehler';
+    return NextResponse.json({ 
+      error: 'Suche fehlgeschlagen',
+      details: errorMessage,
+      hint: 'Stellen Sie sicher, dass GOOGLE_MAPS_API_KEY in Vercel konfiguriert ist'
+    }, { status: 500 });
   }
 }
 

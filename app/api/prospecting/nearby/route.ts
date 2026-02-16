@@ -49,6 +49,10 @@ export async function GET(request: NextRequest) {
     });
   } catch (error) {
     console.error('Nearby search error:', error);
-    return NextResponse.json({ error: 'Bereichssuche fehlgeschlagen' }, { status: 500 });
+    const errorMessage = error instanceof Error ? error.message : 'Unbekannter Fehler';
+    return NextResponse.json({ 
+      error: 'Bereichssuche fehlgeschlagen',
+      details: errorMessage
+    }, { status: 500 });
   }
 }

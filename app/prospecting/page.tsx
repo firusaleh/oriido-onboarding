@@ -105,7 +105,12 @@ export default function ProspectingPage() {
       });
 
       const res = await fetch(`/api/prospecting/search?${params}`);
-      if (!res.ok) throw new Error('Suche fehlgeschlagen');
+      
+      if (!res.ok) {
+        const errorData = await res.json();
+        console.error('API Error:', errorData);
+        throw new Error(errorData.error || 'Suche fehlgeschlagen');
+      }
       
       const data = await res.json();
       setRestaurants(data.restaurants || []);
@@ -120,7 +125,15 @@ export default function ProspectingPage() {
       }
     } catch (error) {
       console.error('Search error:', error);
-      toast.error('Suche fehlgeschlagen');
+      if (error instanceof Error) {
+        if (error.message.includes('Google Maps API Key')) {
+          toast.error('Google Maps API Key fehlt. Bitte in Vercel konfigurieren.');
+        } else {
+          toast.error(error.message || 'Suche fehlgeschlagen');
+        }
+      } else {
+        toast.error('Suche fehlgeschlagen');
+      }
     } finally {
       setLoading(false);
     }

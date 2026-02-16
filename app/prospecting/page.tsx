@@ -108,8 +108,21 @@ export default function ProspectingPage() {
       
       if (!res.ok) {
         const errorData = await res.json();
-        console.error('API Error:', errorData);
-        throw new Error(errorData.error || 'Suche fehlgeschlagen');
+        console.error('API Error Details:', errorData);
+        
+        // Detaillierte Fehlermeldung erstellen
+        let errorMessage = errorData.error || 'Suche fehlgeschlagen';
+        if (errorData.details) {
+          errorMessage += `: ${errorData.details}`;
+        }
+        if (errorData.errorMessage) {
+          errorMessage += ` - ${errorData.errorMessage}`;
+        }
+        if (errorData.hint) {
+          console.log('Hinweis:', errorData.hint);
+        }
+        
+        throw new Error(errorMessage);
       }
       
       const data = await res.json();

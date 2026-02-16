@@ -29,10 +29,26 @@ export async function GET(request: NextRequest) {
       const apiKey = process.env.GOOGLE_MAPS_API_KEY || process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
       if (!apiKey) {
         console.error('Google Maps API Key missing. Available env vars:', Object.keys(process.env).filter(k => k.includes('GOOGLE')));
+        
+        // Gebe Demo-Daten zurück, wenn kein API Key vorhanden ist
         return NextResponse.json({ 
-          error: 'Google Maps API Key fehlt. Bitte fügen Sie GOOGLE_MAPS_API_KEY in Vercel hinzu.',
-          details: 'Die Umgebungsvariable GOOGLE_MAPS_API_KEY muss in den Vercel-Projekteinstellungen konfiguriert werden.'
-        }, { status: 500 });
+          restaurants: [
+            {
+              placeId: 'demo-1',
+              name: '⚠️ Google Maps API Key fehlt',
+              adresse: 'Bitte fügen Sie GOOGLE_MAPS_API_KEY in Vercel hinzu',
+              lat: lat,
+              lng: lng,
+              bewertung: 0,
+              anzahlBewertungen: 0,
+              entfernung: 0,
+              art: 'Info'
+            }
+          ],
+          total: 0,
+          error: 'API Key fehlt',
+          hint: 'Gehen Sie zu Vercel Dashboard → Settings → Environment Variables und fügen Sie GOOGLE_MAPS_API_KEY hinzu'
+        });
       }
 
       const textSearchUrl = `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${encodeURIComponent(
@@ -44,7 +60,12 @@ export async function GET(request: NextRequest) {
 
       if (data.status !== 'OK' && data.status !== 'ZERO_RESULTS') {
         console.error('Google Places API error:', data);
-        return NextResponse.json({ error: 'Suche fehlgeschlagen' }, { status: 500 });
+        return NextResponse.json({ 
+          error: 'Google Places API Fehler',
+          details: data.status,
+          errorMessage: data.error_message || 'Unbekannter API-Fehler',
+          hint: 'Überprüfen Sie den API Key und die Berechtigungen in Google Cloud Console'
+        }, { status: 500 });
       }
 
       const results = data.results || [];

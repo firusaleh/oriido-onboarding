@@ -51,9 +51,24 @@ export async function GET(request: NextRequest) {
         });
       }
 
-      const textSearchUrl = `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${encodeURIComponent(
-        query + ' restaurant'
-      )}&location=${lat},${lng}&radius=${radius}&key=${apiKey}`;
+      // Verwende Text Search für spezifische Suchen oder Nearby Search für allgemeine Suchen
+      let searchUrl;
+      const isGeneralSearch = query.toLowerCase() === 'restaurant' || 
+                             query.toLowerCase() === 'restaurants' || 
+                             query.toLowerCase() === 'essen' ||
+                             query.toLowerCase() === 'food';
+      
+      if (isGeneralSearch) {
+        // Nearby Search gibt mehr lokale Ergebnisse
+        searchUrl = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${lat},${lng}&radius=${radius}&type=restaurant&key=${apiKey}`;
+      } else {
+        // Text Search für spezifische Suchanfragen
+        searchUrl = `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${encodeURIComponent(
+          query + ' restaurant'
+        )}&location=${lat},${lng}&radius=${radius}&key=${apiKey}`;
+      }
+      
+      const textSearchUrl = searchUrl;
 
       const response = await fetch(textSearchUrl);
       const data = await response.json();
@@ -68,7 +83,31 @@ export async function GET(request: NextRequest) {
         }, { status: 500 });
       }
 
-      const results = data.results || [];
+      let allResults = data.results || [];
+      
+      // Google Places API gibt max 20 Ergebnisse pro Seite zurück
+      // Wir können bis zu 3 Seiten abrufen (max 60 Ergebnisse)
+      let nextPageToken = data.next_page_token;
+      let pageCount = 1;
+      
+      while (nextPageToken && pageCount < 3) {
+        // Google erfordert eine kurze Verzögerung zwischen Seitenanfragen
+        await new Promise(resolve => setTimeout(resolve, 1500));
+        
+        const nextPageUrl = `https://maps.googleapis.com/maps/api/place/textsearch/json?pagetoken=${nextPageToken}&key=${apiKey}`;
+        const nextResponse = await fetch(nextPageUrl);
+        const nextData = await nextResponse.json();
+        
+        if (nextData.status === 'OK') {
+          allResults = [...allResults, ...(nextData.results || [])];
+          nextPageToken = nextData.next_page_token;
+          pageCount++;
+        } else {
+          break;
+        }
+      }
+      
+      const results = allResults;
       
       for (const place of results) {
         const existingProspect = await Prospect.findOne({ placeId: place.place_id });

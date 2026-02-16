@@ -101,7 +101,7 @@ export default function ProspectingPage() {
         q: query,
         lat: center.lat.toString(),
         lng: center.lng.toString(),
-        radius: '2000'
+        radius: '5000' // Erhöht von 2km auf 5km für mehr Ergebnisse
       });
 
       const res = await fetch(`/api/prospecting/search?${params}`);

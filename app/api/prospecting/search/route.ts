@@ -53,18 +53,22 @@ export async function GET(request: NextRequest) {
 
       // Verwende Text Search für spezifische Suchen oder Nearby Search für allgemeine Suchen
       let searchUrl;
-      const isGeneralSearch = query.toLowerCase() === 'restaurant' || 
-                             query.toLowerCase() === 'restaurants' || 
-                             query.toLowerCase() === 'essen' ||
-                             query.toLowerCase() === 'food';
+      const searchQuery = query.toLowerCase().trim();
+      const isGeneralSearch = searchQuery === 'restaurant' || 
+                             searchQuery === 'restaurants' || 
+                             searchQuery === 'essen' ||
+                             searchQuery === 'food' ||
+                             searchQuery === '' ||
+                             searchQuery.includes('restaurant');
       
       if (isGeneralSearch) {
         // Nearby Search gibt mehr lokale Ergebnisse
-        searchUrl = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${lat},${lng}&radius=${radius}&type=restaurant&key=${apiKey}`;
+        // Verwende mehrere Typen für mehr Ergebnisse
+        searchUrl = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${lat},${lng}&radius=${radius}&type=restaurant&keyword=restaurant|cafe|food&key=${apiKey}`;
       } else {
         // Text Search für spezifische Suchanfragen
         searchUrl = `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${encodeURIComponent(
-          query + ' restaurant'
+          query + ' restaurant OR ' + query + ' cafe OR ' + query + ' food'
         )}&location=${lat},${lng}&radius=${radius}&key=${apiKey}`;
       }
       
@@ -85,6 +89,8 @@ export async function GET(request: NextRequest) {
 
       let allResults = data.results || [];
       
+      console.log(`Initial results: ${allResults.length}, has next_page_token: ${!!data.next_page_token}`);
+      
       // Google Places API gibt max 20 Ergebnisse pro Seite zurück
       // Wir können bis zu 3 Seiten abrufen (max 60 Ergebnisse)
       let nextPageToken = data.next_page_token;
@@ -92,20 +98,39 @@ export async function GET(request: NextRequest) {
       
       while (nextPageToken && pageCount < 3) {
         // Google erfordert eine kurze Verzögerung zwischen Seitenanfragen
-        await new Promise(resolve => setTimeout(resolve, 1500));
+        await new Promise(resolve => setTimeout(resolve, 2000)); // Erhöht auf 2 Sekunden
         
         const nextPageUrl = `https://maps.googleapis.com/maps/api/place/textsearch/json?pagetoken=${nextPageToken}&key=${apiKey}`;
+        console.log(`Fetching page ${pageCount + 1} with token: ${nextPageToken.substring(0, 20)}...`);
+        
         const nextResponse = await fetch(nextPageUrl);
         const nextData = await nextResponse.json();
+        
+        console.log(`Page ${pageCount + 1} status: ${nextData.status}, results: ${nextData.results?.length || 0}`);
         
         if (nextData.status === 'OK') {
           allResults = [...allResults, ...(nextData.results || [])];
           nextPageToken = nextData.next_page_token;
           pageCount++;
+        } else if (nextData.status === 'INVALID_REQUEST') {
+          console.log('Token might not be ready yet, waiting longer...');
+          await new Promise(resolve => setTimeout(resolve, 2000));
+          // Retry once
+          const retryResponse = await fetch(nextPageUrl);
+          const retryData = await retryResponse.json();
+          if (retryData.status === 'OK') {
+            allResults = [...allResults, ...(retryData.results || [])];
+            nextPageToken = retryData.next_page_token;
+            pageCount++;
+          } else {
+            break;
+          }
         } else {
           break;
         }
       }
+      
+      console.log(`Total results after pagination: ${allResults.length}`);
       
       const results = allResults;
       
